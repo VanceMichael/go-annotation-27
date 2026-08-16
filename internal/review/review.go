@@ -32,6 +32,11 @@ func (e *ChannelError) Error() string {
 		e.SeriesID, e.Op, e.Attempt, e.Err)
 }
 
+// Unwrap 暴露底层原因，供 errors.Is 与 errors.As 沿错误链判定。
+func (e *ChannelError) Unwrap() error {
+	return e.Err
+}
+
 // Attempt 记录一次审核尝试。
 type Attempt struct {
 	No      int    `json:"no"`
