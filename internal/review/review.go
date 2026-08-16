@@ -32,6 +32,12 @@ func (e *ChannelError) Error() string {
 		e.SeriesID, e.Op, e.Attempt, e.Err)
 }
 
+// Unwrap 暴露底层原因，使 errors.Is/As 能沿错误链判定限流等哨兵错误，
+// 从而触发退避重试并归类到正确的退出码与 HTTP 状态码。
+func (e *ChannelError) Unwrap() error {
+	return e.Err
+}
+
 // Attempt 记录一次审核尝试。
 type Attempt struct {
 	No      int    `json:"no"`
